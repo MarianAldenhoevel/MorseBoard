@@ -17,8 +17,8 @@ https://github.com/Danjovic/DigistumpArduino/tree/master/digistump-avr/libraries
   
 His fork supports reading of the host keyboard status values NUM_LOCK, NUM_LOCK and SCROLL_LOCK. These are used here to enable or disable sound and morse-decoding.
   
-Num-Lock:    Toggle Buzzer
-Scroll-Lock: Toggle Decoder
+* Num-Lock:    Toggle Buzzer
+* Scroll-Lock: Toggle Decoder
 
 The hardware consist of the DigiSpark board, a Piezo-Buzzer snapped off a dead PC mainboard and a not-quite antique Morse Key acquired from eBay.
 
