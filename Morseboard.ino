@@ -1,25 +1,31 @@
 /***********************************************************************
-   This implements a USB-Keyboard using a standard Morse key. The morse
-   key is wired to DigiSpark board that connects to a host machine as
-   a USB HID keyboard.
-   
-   This code polls the Morse key, takes timings decodes Morse code and 
-   sends it to the host machine as keypresses or as dots and dashes.
-  
-   I got the idea after watching a Mixtela video of his implementation on
-   YouTube and I have taken a look at his code before writing my own.
-  
-   This uses an enhanced fork of the DigiKey library by Djanovic:
-  
-   https://hackaday.io/page/6947-digikeyboard-with-leds
-   https://github.com/Danjovic/DigistumpArduino/tree/master/digistump-avr/libraries/DigisparkKeyboard
-  
-   His fork supports reading of the host keyboard status values NUM_LOCK, 
-   NUM_LOCK and SCROLL_LOCK. There are used here to enable or disable 
-   sound and morse-decoding.
-  
-   Num-Lock:    Toggle Buzzer
-   Scroll-Lock: Toggle Decoder
+ *  MorseBoard
+ *  (c) Marian Aldenhövel
+ *  marian.aldenhoevel@marian-aldenhoevel.de
+ *  
+ *  Licensed under the GPLv3, have fun.
+ *  
+ *  This implements a USB-Keyboard using a standard Morse key. The morse
+ *  key is wired to DigiSpark board that connects to a host machine as
+ *  a USB HID keyboard.
+ *  
+ *  This code polls the Morse key, takes timings decodes Morse code and 
+ *  sends it to the host machine as keypresses or as dots and dashes.
+ * 
+ *  I got the idea after watching a Mixtela video of his implementation on
+ *  YouTube and I have taken a look at his code before writing my own.
+ * 
+ *  This uses an enhanced fork of the DigiKey library by Djanovic:
+ * 
+ *  https://hackaday.io/page/6947-digikeyboard-with-leds
+ *  https://github.com/Danjovic/DigistumpArduino/tree/master/digistump-avr/libraries/DigisparkKeyboard
+ * 
+ *  His fork supports reading of the host keyboard status values NUM_LOCK, 
+ *  NUM_LOCK and SCROLL_LOCK. There are used here to enable or disable 
+ *  sound and morse-decoding.
+ * 
+ *  Num-Lock:    Toggle Buzzer
+ *  Scroll-Lock: Toggle Decoder
  ***********************************************************************/
 #include "DigiKeyboard.h"
 #include "hidkeys.h" 
