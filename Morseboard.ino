@@ -42,7 +42,7 @@
 #define STATE_RELEASE    3   
 
 // Initial setting for the state-machine.
-static int state = STATE_UNDEFINED;
+int state = STATE_UNDEFINED;
 
 // Other global state:
 int keyState;                       // Current debounced state of the morse key
@@ -69,8 +69,8 @@ unsigned long wordspace = 7;
 int Decode = 1;
 
 // A buffer for symbols (dots and dashes) as collected. And a current pointer into that buffer.
-static char symbolBuffer[10];
-static char *symbol;
+char symbolBuffer[6];
+char *symbol;
 
 // A function for each state. These are continuously called from loop(). 
 
@@ -153,7 +153,7 @@ void RELEASE() {
     clearSymbolBuffer(); // We stay in state RELEASE, but without symbols queued up nothing happens.
   } else if (keyUpInterval >= base*wordspace) {
     if (Decode) {
-      DigiKeyboard.sendKeyStroke(KEY_SPACE);
+      DigiKeyboard.sendKeyStroke(KEY_SPACE);      
     } else {
       // If not decoding use triple space as word-separator.
       DigiKeyboard.sendKeyStroke(KEY_SPACE);
@@ -489,28 +489,28 @@ void decodeSymbol() {
 
 /*
 // Plays a dit on the buzzer.
-void play_dit() {
+void playDit() {
   analogWrite(BUZZER_PIN, 128); 
   DigiKeyboard.delay(base*dit);
   analogWrite(BUZZER_PIN, 0);
 }
 
 // Plays a dah on the buzzer.
-void play_dah() {
+void playDah() {
   analogWrite(BUZZER_PIN, 128); 
   DigiKeyboard.delay(base*dah);
   analogWrite(BUZZER_PIN, 0);
 }
 
 // Takes a string of dots, dashes and spaces and plays it out on the buzzer
-void play_morse(char *morse) {
+void playMorse(char *morse) {
   char *c = morse;
   while (*c != 0) {
     if (*c == '.') {
-      play_dit();
+      playDit();
       DigiKeyboard.delay(base*symbolspace);
     } else if (*c == '-') {
-      play_dah();
+      playDah();
       DigiKeyboard.delay(base*symbolspace);
     } else if (*c == ' ') {
       DigiKeyboard.delay(base*characterspace);
@@ -519,43 +519,43 @@ void play_morse(char *morse) {
   }
 }
 
-void play_char(char *c) {
-  if (*c == 'A') { play_morse(".-"); }
-  else if (*c == 'B') { play_morse("-..") ; }
-  else if (*c == 'C') { play_morse("-...") ; }
-  else if (*c == 'D') { play_morse("-.-.") ; }
-  else if (*c == 'E') { play_morse(".") ; }
-  else if (*c == 'F') { play_morse("..-.") ; }
-  else if (*c == 'G') { play_morse("--.") ; }
-  else if (*c == 'H') { play_morse("....") ; }
-  else if (*c == 'I') { play_morse("..") ; }
-  else if (*c == 'J') { play_morse(".---") ; }
-  else if (*c == 'K') { play_morse("-.-") ; }
-  else if (*c == 'L') { play_morse(".-..") ; }
-  else if (*c == 'M') { play_morse("--") ; }
-  else if (*c == 'N') { play_morse("-.") ; }
-  else if (*c == 'O') { play_morse("---") ; }
-  else if (*c == 'P') { play_morse(".--.") ; }
-  else if (*c == 'Q') { play_morse("--.-") ; }
-  else if (*c == 'R') { play_morse(".-.") ; }
-  else if (*c == 'S') { play_morse("...") ; }
-  else if (*c == 'T') { play_morse("-") ; }
-  else if (*c == 'U') { play_morse("..-") ; }
-  else if (*c == 'V') { play_morse("..-") ; }
-  else if (*c == 'W') { play_morse(".--") ; }
-  else if (*c == 'X') { play_morse("-..-") ; }
-  else if (*c == 'Y') { play_morse("-.--") ; }
-  else if (*c == 'Z') { play_morse("--..") ; }
-  else if (*c == '0') { play_morse("-----") ; }
-  else if (*c == '1') { play_morse(".----") ; }
-  else if (*c == '2') { play_morse("..---") ; }
-  else if (*c == '3') { play_morse("...--") ; }
-  else if (*c == '4') { play_morse("....-") ; }
-  else if (*c == '5') { play_morse(".....") ; }
-  else if (*c == '6') { play_morse("-....") ; }
-  else if (*c == '7') { play_morse("--...") ; }
-  else if (*c == '8') { play_morse("---..") ; }
-  else if (*c == '9') { play_morse("----.") ; }
+void playChar(char *c) {
+  if (*c == 'A') { playMorse(".-"); }
+  else if (*c == 'B') { playMorse("-.."); }
+  else if (*c == 'C') { playMorse("-..."); }
+  else if (*c == 'D') { playMorse("-.-."); }
+  else if (*c == 'E') { playMorse("."); }
+  else if (*c == 'F') { playMorse("..-."); }
+  else if (*c == 'G') { playMorse("--."); }
+  else if (*c == 'H') { playMorse("...."); }
+  else if (*c == 'I') { playMorse(".."); }
+  else if (*c == 'J') { playMorse(".---"); }
+  else if (*c == 'K') { playMorse("-.-"); }
+  else if (*c == 'L') { playMorse(".-.."); }
+  else if (*c == 'M') { playMorse("--"); }
+  else if (*c == 'N') { playMorse("-."); }
+  else if (*c == 'O') { playMorse("---"); }
+  else if (*c == 'P') { playMorse(".--."); }
+  else if (*c == 'Q') { playMorse("--.-"); }
+  else if (*c == 'R') { playMorse(".-."); }
+  else if (*c == 'S') { playMorse("..."); }
+  else if (*c == 'T') { playMorse("-"); }
+  else if (*c == 'U') { playMorse("..-"); }
+  else if (*c == 'V') { playMorse("..-"); }
+  else if (*c == 'W') { playMorse(".--"); }
+  else if (*c == 'X') { playMorse("-..-"); }
+  else if (*c == 'Y') { playMorse("-.--"); }
+  else if (*c == 'Z') { playMorse("--.."); }
+  else if (*c == '0') { playMorse("-----"); }
+  else if (*c == '1') { playMorse(".----"); }
+  else if (*c == '2') { playMorse("..---"); }
+  else if (*c == '3') { playMorse("...--"); }
+  else if (*c == '4') { playMorse("....-"); }
+  else if (*c == '5') { playMorse("....."); }
+  else if (*c == '6') { playMorse("-...."); }
+  else if (*c == '7') { playMorse("--..."); }
+  else if (*c == '8') { playMorse("---.."); }
+  else if (*c == '9') { playMorse("----."); }
   
   DigiKeyboard.delay(base*characterspace);
 }
@@ -563,7 +563,7 @@ void play_char(char *c) {
 void play(char *msg) {
   char *c = msg;
   while (*c != 0) {
-    play_char(c);
+    playChar(c);
     c++;
   }
 }
@@ -597,6 +597,15 @@ void setup() {
 
   // Set initial state.
   state = STATE_IDLING;
+
+  // Signal ready by buzzing.
+  analogWrite(BUZZER_PIN, 128); 
+  DigiKeyboard.delay(base*dit);
+  analogWrite(BUZZER_PIN, 0);
+  DigiKeyboard.delay(base*dit);
+  analogWrite(BUZZER_PIN, 128); 
+  DigiKeyboard.delay(base*dit);
+  analogWrite(BUZZER_PIN, 0);
 }
 
 void loop() {
@@ -624,8 +633,8 @@ void loop() {
       Decode = (!(DigiKeyboard.getLEDs() & SCROLL_LOCK));
       
       if (keyState == KEY_DOWN) {
-        // Key is now down. LED on. Only turn on buzzer if Num Lock is on.
-        if (DigiKeyboard.getLEDs() & NUM_LOCK) {    
+        // Key is now down. LED on. Only turn on buzzer if Num Lock is off.
+        if (!(DigiKeyboard.getLEDs() & NUM_LOCK)) {    
           analogWrite(BUZZER_PIN, 128);
         } 
         
