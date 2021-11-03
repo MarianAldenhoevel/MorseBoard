@@ -262,7 +262,7 @@ void decodeSymbol() {
             if (symbolBuffer[5] == '.') {
               if (symbolBuffer[6] == 0) {
                 DigiKeyboard.sendKeyStroke(KEY_SLASH, MOD_SHIFT_LEFT); // ?
-              } else {
+            } else {
                 // decode-error
               }
             } else if (symbolBuffer[5] == '-') {
@@ -292,6 +292,12 @@ void decodeSymbol() {
         } else if (symbolBuffer[3] == '.') {
           if (symbolBuffer[4] == 0) {
             DigiKeyboard.sendKeyStroke(KEY_L, MOD_SHIFT_LEFT);
+          } else if (symbolBuffer[5] == '-') {
+              if (symbolBuffer[6] == 0) {
+                DigiKeyboard.sendKeyStroke(KEY_KPAD_AND); // &
+              } else {
+                // decode-error
+              }
           } else {
             // decode-error
           }
@@ -326,7 +332,17 @@ void decodeSymbol() {
         if (symbolBuffer[3] == '.') {
           if (symbolBuffer[4] == 0) {
             DigiKeyboard.sendKeyStroke(KEY_P, MOD_SHIFT_LEFT);
-          } else {
+          } else if (symbolBuffer[4] == '-') {
+              if (symbolBuffer[5] == '.') {
+                if (symbolBuffer[6] == 0) {
+                  DigiKeyboard.sendKeyStroke(KEY_KPAD_AT);
+                } else {
+                  // decode-error
+                }
+              } else {
+                // decode-error
+              }
+          } else {            
             // decode-error
           }
         } else if (symbolBuffer[3] == '-') {
@@ -356,7 +372,9 @@ void decodeSymbol() {
     } else if (symbolBuffer[1] == '.') {
       if (symbolBuffer[2] == '.') {
         if (symbolBuffer[3] == '.') {
-          if (symbolBuffer[4] == '.') {
+          if (symbolBuffer[4] == 0) {
+            DigiKeyboard.sendKeyStroke(KEY_B, MOD_SHIFT_LEFT);
+          } else if (symbolBuffer[4] == '.') {
             if (symbolBuffer[5] == 0) {
               DigiKeyboard.sendKeyStroke(KEY_6);
             } else if (symbolBuffer[5] == '-') {
@@ -366,10 +384,10 @@ void decodeSymbol() {
             }
           } else if (symbolBuffer[4] == '-') {
             if (symbolBuffer[5] == 0) {
-              DigiKeyboard.sendKeyStroke(KEY_EQUAL);
+              DigiKeyboard.sendKeyStroke(KEY_KPAD_EQUAL);
             }
           } else {
-            DigiKeyboard.sendKeyStroke(KEY_B, MOD_SHIFT_LEFT);
+            // decode-error
           }
         } else if (symbolBuffer[3] == '-') {
           if (symbolBuffer[4] == 0) {
@@ -396,13 +414,25 @@ void decodeSymbol() {
         if (symbolBuffer[3] == '.') {
           if (symbolBuffer[4] == 0) {
             DigiKeyboard.sendKeyStroke(KEY_C, MOD_SHIFT_LEFT);
+          } else if (symbolBuffer[4] == '-') {
+            DigiKeyboard.sendKeyStroke(KEY_KPAD_EXCLAMATION); // !
           } else {
             // decode-error
           }
         } else if (symbolBuffer[3] == '-') {
           if (symbolBuffer[4] == 0) {
             DigiKeyboard.sendKeyStroke(KEY_Y, MOD_SHIFT_LEFT);
-          } else {
+          } else if (symbolBuffer[4] == '.') {
+            if (symbolBuffer[5] == '-') {                
+              if (symbolBuffer[6] == 0) {
+                DigiKeyboard.sendKeyStroke(KEY_KPAD_LEFT_PAREN);
+              } else if (symbolBuffer[6] == '-') {
+                DigiKeyboard.sendKeyStroke(KEY_KPAD_RIGHT_PAREN);
+              } else {
+                // decode-error
+              }
+            }
+          } else {            
             // decode-error
           }
         } else if (symbolBuffer[3] == 0) {
@@ -451,6 +481,12 @@ void decodeSymbol() {
           if (symbolBuffer[4] == '.') {
             if (symbolBuffer[5] == 0) {
               DigiKeyboard.sendKeyStroke(KEY_8);
+            } else if (symbolBuffer[5] == '.') {
+              if (symbolBuffer[6] == 0) {
+                DigiKeyboard.sendKeyStroke(KEY_KPAD_COLON);
+              } else {
+                // decode-error
+              }
             } else {
               // decode-error
             }
