@@ -1,6 +1,8 @@
 # MorseBoard
 
 This implements a USB-Keyboard using a standard Morse key. The morse key is wired to DigiSpark board that connects to a host machine as a USB HID keyboard.
+
+![MorseBoard USB Keyboard](Morseboard.jpg)
    
 I got the idea after watching a Mixtela video of his implementation on YouTube:
 
