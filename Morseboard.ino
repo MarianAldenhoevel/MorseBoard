@@ -54,7 +54,7 @@ int state = STATE_UNDEFINED;
 int keyState;                       // Current debounced state of the morse key
 int lastKeyState = HIGH;            // Previous reading from the morse key input pin
 unsigned long lastDebounceTime = 0; // Last time the morse key state has been seen as toggled
-unsigned long debounceDelay = 50;   // Debounce dead-time, adjust through experimentation as required by the hardware 
+unsigned long debounceDelay = 10;   // Debounce dead-time, adjust through experimentation as required by the hardware 
 
 // These are used to time the morse key up- and down-states.
 unsigned long keyDownTime = 0;  // millis()-Value for when solid key down is detected.
@@ -75,7 +75,7 @@ unsigned long wordspace = 7;
 int Decode = 1;
 
 // A buffer for symbols (dots and dashes) as collected. And a current pointer into that buffer.
-char symbolBuffer[6];
+char symbolBuffer[10];
 char *symbol;
 
 // A function for each state. These are continuously called from loop(). 
@@ -100,38 +100,51 @@ void DOWN() {
   if (keyState == KEY_UP) {
     keyUpTime = millis();
 
-    // Do we have space in the symbol buffer? If not just ignore.
-    if (symbol != &symbolBuffer[sizeof(symbolBuffer)]) {
-      // Yes.
-      unsigned long ditInterval = base*dit;
-      if (keyDownInterval <= 3*ditInterval/2) {
-        // Store dit.
-        *symbol++ = '.';
-        
-        // If we are not decoding send keystroke for the symbol immediately.
-        if (!Decode) {
-          DigiKeyboard.sendKeyStroke(KEY_DOT);
+    // Is the past down-period encoding a dit or a dah?
+    unsigned long ditInterval = base*dit;
+    int isDit = (keyDownInterval <= 3*ditInterval/2);
+
+    if (Decode) {
+      // Decoding is on, collect symbols up to a character pause so we can later decode.
+      // Is there space in the symbol buffer?
+      if (symbol != &symbolBuffer[sizeof(symbolBuffer)]) {
+        // Yes.
+        if (isDit) {
+          // Store dit.
+          *symbol++ = '.';
+        } else {
+          // Store dah.
+          *symbol++ = '-';
         }
+      }   
+    } else {
+      // Decoding is off. Send dots and dashes to the host. In this mode we can ignore
+      // the size of the symbol buffer and send an unlimited number of symbols. We need
+      // to store SOMETHING, though, so that the doubly-managed RELEASE-State can do it's
+      // thing and send inter-character spaces. Just put anything into the first slot
+      // in the buffer to mark it non-empty.
+      symbolBuffer[0] = 'x';
+      symbol = &symbolBuffer[1];
+      
+      if (isDit) {
+        DigiKeyboard.sendKeyStroke(KEY_DOT);
       } else {
-        // Store dah.
-        *symbol++ = '-';
-        
-        // If we are not decoding send keystroke for the symbol immediately.
-        if (!Decode) {
-          DigiKeyboard.sendKeyStroke(KEY_KPAD_MINUS);
-        }
+        DigiKeyboard.sendKeyStroke(KEY_KPAD_MINUS);
       }
     }
-          
+           
     state = STATE_RELEASE;
   } else if (keyDownInterval >= base*wordspace) {
+    
+    // Send backspace.
     DigiKeyboard.sendKeyStroke(KEY_BACKSP);
     state = STATE_LONGDOWN;
   }
 }
 
 void LONGDOWN() {   
-  // Key has been held down for a long time. Wait indefinitely for it to be released. 
+  // Key has been held down for a long time and special long-down handling (BACKSPACE) has been 
+  // done. Now wait indefinitely for the key to be released. 
   //   - If key is released -> IDLING.
   if (keyState == KEY_UP) {
     state = STATE_IDLING;    
@@ -641,11 +654,11 @@ void setup() {
   state = STATE_IDLING;
 
   // Signal ready by buzzing.
-  analogWrite(BUZZER_PIN, 128); 
+  analogWrite(BUZZER_PIN, 0); 
   DigiKeyboard.delay(base*dit);
   analogWrite(BUZZER_PIN, 0);
   DigiKeyboard.delay(base*dit);
-  analogWrite(BUZZER_PIN, 128); 
+  analogWrite(BUZZER_PIN, 0); 
   DigiKeyboard.delay(base*dit);
   analogWrite(BUZZER_PIN, 0);
 }
